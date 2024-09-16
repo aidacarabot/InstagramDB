@@ -23,6 +23,16 @@ const createPost = async (req, res, next) => {
     }
 };
 
+//Get all posts
+const getAllPosts = async (req, res, next) => {
+    try {
+        const posts = await Post.find().populate('account', 'username'); // Popular el campo username desde Account
+        res.status(200).json(posts);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
+};
+
 // Get a post by ID
 const getPost = async (req, res, next) => {
     try {
@@ -90,4 +100,4 @@ const deletePost = async (req, res, next) => {
 };
 
 
-module.exports = { createPost, getPost, updatePost, deletePost };
+module.exports = { createPost, getPost, updatePost, deletePost, getAllPosts };

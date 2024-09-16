@@ -22,6 +22,16 @@ const createAccount = async (req, res, next) => {
 }
 };
 
+// Obtener todas las cuentas
+const getAllAccounts = async (req, res, next) => {
+    try {
+      const accounts = await Account.find();
+      res.status(200).json(accounts);
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  };
+
 // Get an account by ID
 const getAccount = async (req, res, next) => {
     try {
@@ -87,4 +97,4 @@ const deleteAccount = async (req, res, next) => {
 }
 };
 
-module.exports = { createAccount, getAccount, updateAccount, deleteAccount };
+module.exports = { createAccount, getAccount, updateAccount, deleteAccount, getAllAccounts };
