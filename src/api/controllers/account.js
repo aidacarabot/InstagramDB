@@ -1,25 +1,36 @@
+const { deleteImgCloudinary } = require('../../utils/deleteFile');
 const Account = require('../models/account');
+const Post = require('../models/post');
 const cloudinary = require('cloudinary').v2;
+
 
 // Create a new account
 const createAccount = async (req, res, next) => {
-  try {
-    const newPost = new Post({
-        caption: req.body.caption,
-        imageUrl: req.file.path, // Cloudinary stores the image URL in `req.file.path`
-        account: req.body.account,
-    });
-    await newPost.save();
+    try {
+        // Creación de la cuenta
+        const newAccount = new Account({
+            username: req.body.username,
+            bio: req.body.bio,
+            profilePicture: req.file ? req.file.path : '',
+            followers: req.body.followers || 0,
+            following: req.body.following || 0,
+        });
 
-    // Optionally, update the account's posts array (if tracked)
-    await Account.findByIdAndUpdate(req.body.account, {
-        $inc: { posts: 1 }
-    });
+        await newAccount.save();
 
-    res.status(201).json(newPost);
-} catch (error) {
-    res.status(400).json({ error: error.message });
-}
+        // Si estás creando un post asociado a la cuenta
+        const newPost = new Post({
+            caption: "Nuevo post de bienvenida",
+            imageUrl: req.file ? req.file.path : '',
+            account: newAccount._id
+        });
+
+        await newPost.save();
+
+        res.status(201).json(newAccount);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
+    }
 };
 
 // Obtener todas las cuentas
@@ -47,54 +58,58 @@ const getAccount = async (req, res, next) => {
 
 // Update an account
 const updateAccount = async (req, res, next) => {
-  try {
-    const post = await Post.findById(req.params.id);
-    if (!post) {
-        return res.status(404).json({ message: 'Post not found' });
+    try {
+        const account = await Account.findById(req.params.id);
+        if (!account) {
+            return res.status(404).json({ message: 'Account not found' });
+        }
+
+        // Eliminar la imagen antigua de Cloudinary si se sube una nueva
+        if (req.file && account.profilePicture) {
+            deleteImgCloudinary(account.profilePicture);
+        }
+
+        // Actualizar la imagen de perfil con la nueva URL
+        if (req.file) {
+            account.profilePicture = req.file.path;
+        }
+
+        await account.save();
+
+        res.status(200).json(account);
+    } catch (error) {
+        res.status(400).json({ message: error.message });
     }
-
-    // If a new image is uploaded, delete the old image from Cloudinary
-    if (req.file) {
-        const publicId = post.imageUrl.split('/').pop().split('.')[0]; // Extract the publicId from the URL
-        await cloudinary.uploader.destroy(publicId); // Delete the old image
-
-        // Update the post with the new image URL
-        post.imageUrl = req.file.path;
-    }
-
-    // Update other fields
-    post.caption = req.body.caption || post.caption;
-    await post.save();
-
-    res.status(200).json(post);
-} catch (error) {
-    res.status(400).json({ error: error.message });
-}
 };
+
 
 // Delete an account
 const deleteAccount = async (req, res, next) => {
-  try {
-    const post = await Post.findById(req.params.id);
-    if (!post) {
-        return res.status(404).json({ message: 'Post not found' });
+    try {
+        const account = await Account.findById(req.params.id);
+        if (!account) {
+            return res.status(404).json({ message: 'Account not found' });
+        }
+
+        // Eliminar los posts asociados con esta cuenta
+        const posts = await Post.find({ account: req.params.id });
+        if (posts.length > 0) {
+            await Post.deleteMany({ account: req.params.id });
+        }
+
+        // Eliminar la imagen de perfil de Cloudinary
+        if (account.profilePicture) {
+            deleteImgCloudinary(account.profilePicture);
+        }
+
+        // Eliminar la cuenta
+        await Account.findByIdAndDelete(req.params.id);
+
+        res.status(200).json({ message: 'Account and associated posts and image deleted successfully' });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
     }
-
-    // Delete the image from Cloudinary
-    const publicId = post.imageUrl.split('/').pop().split('.')[0]; // Extract the publicId from the URL
-    await cloudinary.uploader.destroy(publicId); // Delete the image
-
-    await post.remove();
-
-    // Optionally, update the account's posts array (if tracked)
-    await Account.findByIdAndUpdate(post.account, {
-        $inc: { posts: -1 }
-    });
-
-    res.status(200).json({ message: 'Post and associated image deleted successfully' });
-} catch (error) {
-    res.status(400).json({ error: error.message });
-}
 };
+
 
 module.exports = { createAccount, getAccount, updateAccount, deleteAccount, getAllAccounts };

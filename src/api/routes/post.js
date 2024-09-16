@@ -4,9 +4,9 @@ const postRouter = require("express").Router();
 
 
 postRouter.post('/', upload.single("image"), createPost);
-postRouter.get('/:id', upload.single("image"), getAllPosts);
-postRouter.get('/:id', upload.single("image"), getPost);
-postRouter.put('/:id', updatePost);
+postRouter.get('/:id', getAllPosts);
+postRouter.get('/:id', getPost); 
+postRouter.put('/:id', upload.single("image"), updatePost);
 postRouter.delete('/:id', deletePost);
 
 module.exports = postRouter;
