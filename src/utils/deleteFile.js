@@ -9,7 +9,7 @@ const deleteImgCloudinary = (imgUrl) => {
 
   //----Con el método destroy localizamos nuestro archivo e imprimimos por callback un console.log indicando que se ha podido destruir correctamente.
   cloudinary.uploader.destroy(public_id, () => {
-      console.log('Imagen eliminada en cloudinary')
+      console.log('Picture has been removed from cloudinary')
   })
 }
 

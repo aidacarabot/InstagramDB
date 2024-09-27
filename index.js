@@ -17,13 +17,14 @@ const app = express();
 connectDB();
 app.use(express.json());
 
-app.use("/api/v1/account", accountRouter);
+app.use("/api/v1/account", accountRouter); // Usar el accountRouter para todas las rutas que empiezan con '/api(v1/account'
 app.use("/api/v1/post", postRouter);
 
 app.use("*", (req, res, next) => {
   return res.status(404).json("Route not found")
 })
 
+//Abrir el servidor
 app.listen(3000, () => {
   console.log("Server working on: http://localhost:3000");
 })
