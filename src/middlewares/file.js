@@ -7,7 +7,6 @@ const storage = new CloudinaryStorage({
   cloudinary: cloudinary, // Asocia la configuración de Cloudinary previamente inicializada
 
   params: {
-      folder: 'Instagram_Project', // Todas las imágenes se guardarán en la carpeta 'Instagram_Project' en Cloudinary
       allowedFormats: ['jpg', 'png', 'jpeg', 'gif'] // Especifica los formatos permitidos para los archivos subidos
   }
 });

@@ -3,10 +3,10 @@ const { createPost, getPost, updatePost, deletePost, getAllPosts } = require("..
 const postRouter = require("express").Router();
 
 
-postRouter.post('/', upload.single("image"), createPost);
-postRouter.get('/:id', getAllPosts);
-postRouter.get('/:id', getPost); 
-postRouter.put('/:id', upload.single("image"), updatePost);
-postRouter.delete('/:id', deletePost);
+postRouter.post('/', upload.single("imageUrl"), createPost); //Crear un post
+postRouter.get('/', getAllPosts); // Get all posts
+postRouter.get('/:id', getPost); //Get Post By ID
+postRouter.put('/:id', upload.single("imageUrl"), updatePost); //Update post
+postRouter.delete('/:id', deletePost); //Delete post
 
 module.exports = postRouter;
