@@ -1,4 +1,4 @@
-# InstagramDB
+# InstagramDB 📸
 
 InstagramDB es una API RESTful construida con Node.js, Express y MongoDB, diseñada para simular una base de datos de Instagram. Permite la creación, lectura, actualización y eliminación (CRUD) de cuentas de usuario y publicaciones, incluyendo la subida y gestión de imágenes a través de Cloudinary.
 
@@ -6,17 +6,17 @@ El sistema de autenticación de la API utiliza JSON Web Tokens (JWT) para proteg
 
 Las contraseñas de los usuarios se gestionan utilizando bcrypt para asegurar el almacenamiento seguro, aplicando un hash a las contraseñas antes de almacenarlas en la base de datos. Este enfoque garantiza que incluso si la base de datos es comprometida, las contraseñas originales no serán expuestas.
 
-## Características
+## Características ✨
 
 - **CRUD completo**: Operaciones CRUD completas para las colecciones de `Accounts` y `Posts`.
-- **Subida de archivos**: Manejo de la subida de imágenes tanto para perfiles de usuario (`profilePicture`) como para publicaciones (`imageUrl`), con almacenamiento en Cloudinary.
-- **Eliminación de archivos**: Eliminación automática de las imágenes almacenadas en Cloudinary cuando se borra un `Account` o `Post`.
-- **Relaciones entre colecciones**: Los `Posts` están relacionados con los `Accounts` a través de una referencia de MongoDB.
-- **Autenticación**: Autenticación de usuarios mediante JWT, con protección de rutas a través del esquema Bearer.
-- **Seguridad**: Gestión de contraseñas mediante bcrypt para asegurar que las contraseñas sean almacenadas de manera segura.
-- **Semillas de datos**: Script para la carga inicial de datos en la base de datos.
+- **📁 Subida de archivos**: Manejo de la subida de imágenes tanto para perfiles de usuario (`profilePicture`) como para publicaciones (`imageUrl`), con almacenamiento en Cloudinary.
+- **🗑️ Eliminación de archivos**: Eliminación automática de las imágenes almacenadas en Cloudinary cuando se borra un `Account` o `Post`.
+- **🔗 Relaciones entre colecciones**: Los `Posts` están relacionados con los `Accounts` a través de una referencia de MongoDB.
+- **🔒 Autenticación**: Autenticación de usuarios mediante JWT, con protección de rutas a través del esquema Bearer.
+- **🛡️ Seguridad**: Gestión de contraseñas mediante bcrypt para asegurar que las contraseñas sean almacenadas de manera segura.
+- **🌱 Semillas de datos**: Script para la carga inicial de datos en la base de datos.
 
-## Tecnologías Utilizadas
+## Tecnologías Utilizadas 🛠️
 
 - **Node.js**: Entorno de ejecución para JavaScript en el servidor.
 - **Express**: Framework de Node.js para la construcción de aplicaciones web y APIs.
@@ -28,7 +28,7 @@ Las contraseñas de los usuarios se gestionan utilizando bcrypt para asegurar el
 - **jsonwebtoken**: Para la generación y verificación de JWT.
 - **dotenv**: Módulo para manejar variables de entorno.
 
-## Instalación
+## Instalación 🚀
 
 Sigue los pasos a continuación para clonar y configurar el proyecto en tu entorno local:
 
@@ -36,7 +36,6 @@ Sigue los pasos a continuación para clonar y configurar el proyecto en tu entor
    ```bash
    git clone https://github.com/aidact3/InstagramDB.git
    cd InstagramDB
-   ```
 
 2. **Instalar dependencias**:
    ```bash
