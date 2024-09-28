@@ -140,13 +140,19 @@ const login = async (req, res, next) => {
         // Busca el usuario en la base de datos
         const user = await Account.findOne({ username: req.body.username });
         
-        // Si el usuario no existe o la contraseña es incorrecta, devolver un error general
-        if (!user || !bcrypt.compareSync(req.body.password, user.password)) {
+        // Si el usuario no existe
+        if (!user) {
             return res.status(400).json("The username or password is incorrect");
         }
 
-        // Si las credenciales son correctas, generar un token
-        const token = generateSign(user._id); // Genera un token JWT si estás usando JWT
+        // Compara la contraseña introducida con la almacenada en la base de datos
+        const passwordMatch = bcrypt.compareSync(req.body.password, user.password);
+        if (!passwordMatch) {
+            return res.status(400).json("The username or password is incorrect");
+        }
+
+        // Si la verificación es correcta, genera un token
+        const token = generateSign(user._id); // Usar tu método para generar un JWT
         return res.status(200).json({ user, token });
 
     } catch (error) {
@@ -155,4 +161,4 @@ const login = async (req, res, next) => {
 };
 
 
-module.exports = { createAccount, getAccount, updateAccount, deleteAccount, getAllAccounts };
+module.exports = { createAccount, getAccount, updateAccount, deleteAccount, getAllAccounts, login };
