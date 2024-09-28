@@ -1,12 +1,14 @@
+const { isAuth } = require("../../middlewares/auth");
 const upload = require("../../middlewares/file");
 const { createPost, getPost, updatePost, deletePost, getAllPosts } = require("../controllers/post");
 const postRouter = require("express").Router();
 
 
-postRouter.post('/', upload.single("imageUrl"), createPost); //Crear un post
-postRouter.get('/', getAllPosts); // Get all posts
-postRouter.get('/:id', getPost); //Get Post By ID
-postRouter.put('/:id', upload.single("imageUrl"), updatePost); //Update post
-postRouter.delete('/:id', deletePost); //Delete post
+postRouter.get('/:id', getPost); // Obtener un post por ID
+postRouter.post('/', isAuth, upload.single("imageUrl"), createPost); // Crear un nuevo post, solo para usuarios autenticados
+postRouter.get('/', isAuth, getAllPosts); // Obtener todos los posts, solo para usuarios autenticados
+postRouter.put('/:id', isAuth, upload.single("imageUrl"), updatePost); // Actualizar un post, solo para usuarios autenticados
+postRouter.delete('/:id', isAuth, deletePost); // Eliminar un post, solo para usuarios autenticados
+
 
 module.exports = postRouter;

@@ -1,14 +1,22 @@
+const { generateSign } = require('../../config/jwt');
 const { deleteImgCloudinary } = require('../../utils/deleteFile');
 const Account = require('../models/account');// Importas el modelo de la cuenta (Account) desde la carpeta models, que define cómo se almacenan las cuentas en la base de datos.
 const Post = require('../models/post');
 const cloudinary = require('cloudinary').v2;//Importas el módulo cloudinary para manejar la subida de archivos a Cloudinary.
+const bcrypt = require("bcrypt");
 
 
 //! Create a new account
 const createAccount = async (req, res, next) => {
     try {
         // Desestructurar los valores de req.body
-        const { username, bio, followers = 0, following = 0 } = req.body;
+        const { username, password, bio, followers = 0, following = 0 } = req.body;
+
+        // Verifica si el nombre de usuario ya existe
+        const duplicateUser = await Account.findOne({ username: username });
+        if (duplicateUser) {
+            return res.status(400).json("El nombre de usuario ya existe");
+        }
 
         // Intento de reutilización del storage de Cloudinary cambiando la carpeta
         let profilePictureUrl = ''; // Se utiliza para almacenar la URL de la imagen de perfil que se subirá a Cloudinary
@@ -23,6 +31,7 @@ const createAccount = async (req, res, next) => {
         // Creación de la cuenta
         const newAccount = new Account({
             username,
+            password: bcrypt.hashSync(password, 10), // Hasheo de la contraseña
             bio,
             profilePicture: profilePictureUrl,
             followers,
@@ -97,7 +106,6 @@ const updateAccount = async (req, res, next) => {
     }
 };
 
-
 //! Delete an account by ID
 const deleteAccount = async (req, res, next) => {
     try {
@@ -123,6 +131,26 @@ const deleteAccount = async (req, res, next) => {
         res.status(200).json({ message: 'Account and associated posts and image deleted successfully' });
     } catch (error) {
         res.status(400).json({ message: error.message });
+    }
+};
+
+//! LOGIN
+const login = async (req, res, next) => {
+    try {
+        // Busca el usuario en la base de datos
+        const user = await Account.findOne({ username: req.body.username });
+        
+        // Si el usuario no existe o la contraseña es incorrecta, devolver un error general
+        if (!user || !bcrypt.compareSync(req.body.password, user.password)) {
+            return res.status(400).json("The username or password is incorrect");
+        }
+
+        // Si las credenciales son correctas, generar un token
+        const token = generateSign(user._id); // Genera un token JWT si estás usando JWT
+        return res.status(200).json({ user, token });
+
+    } catch (error) {
+        return res.status(400).json({ error: error.message });
     }
 };
 

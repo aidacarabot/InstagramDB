@@ -8,6 +8,10 @@ const Account = new Schema({
         required: true,
         unique: true
     },
+    password: {
+        type: String,
+        required: true
+    },
     bio: {
         type: String,
         default: ''
