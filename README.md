@@ -1,58 +1,59 @@
 # InstagramDB 📸
 
-InstagramDB es una API RESTful construida con Node.js, Express y MongoDB, diseñada para simular una base de datos de Instagram. Permite la creación, lectura, actualización y eliminación (CRUD) de cuentas de usuario y publicaciones, incluyendo la subida y gestión de imágenes a través de Cloudinary.
+InstagramDB is a RESTful API built with Node.js, Express, and MongoDB, designed to simulate an Instagram database. It allows creation, reading, updating, and deletion (CRUD) of user accounts and posts, including uploading and managing images via Cloudinary.
 
-El sistema de autenticación de la API utiliza JSON Web Tokens (JWT) para proteger las rutas, asegurando que solo los usuarios autenticados puedan realizar operaciones. La autenticación se realiza mediante el esquema Bearer, donde los usuarios reciben un token JWT al iniciar sesión, el cual deben incluir en las cabeceras de las solicitudes a rutas protegidas.
+The API’s authentication system uses JSON Web Tokens (JWT) to protect routes, ensuring only authenticated users can perform operations. Authentication is done using the Bearer scheme, where users receive a JWT token upon login, which must be included in the request headers for protected routes.
 
-Las contraseñas de los usuarios se gestionan utilizando bcrypt para asegurar el almacenamiento seguro, aplicando un hash a las contraseñas antes de almacenarlas en la base de datos. Este enfoque garantiza que incluso si la base de datos es comprometida, las contraseñas originales no serán expuestas.
+User passwords are managed using bcrypt to ensure secure storage, hashing passwords before saving them in the database. This guarantees that even if the database is compromised, original passwords won’t be exposed.
 
-## Características ✨
+## Features ✨
 
-- **CRUD completo**: Operaciones CRUD completas para las colecciones de `Accounts` y `Posts`.
-- **📁 Subida de archivos**: Manejo de la subida de imágenes tanto para perfiles de usuario (`profilePicture`) como para publicaciones (`imageUrl`), con almacenamiento en Cloudinary.
-- **🗑️ Eliminación de archivos**: Eliminación automática de las imágenes almacenadas en Cloudinary cuando se borra un `Account` o `Post`.
-- **🔗 Relaciones entre colecciones**: Los `Posts` están relacionados con los `Accounts` a través de una referencia de MongoDB.
-- **🔒 Autenticación**: Autenticación de usuarios mediante JWT, con protección de rutas a través del esquema Bearer.
-- **🛡️ Seguridad**: Gestión de contraseñas mediante bcrypt para asegurar que las contraseñas sean almacenadas de manera segura.
-- **🌱 Semillas de datos**: Script para la carga inicial de datos en la base de datos.
+- **Full CRUD**: Complete CRUD operations for `Accounts` and `Posts` collections.
+- **📁 File Uploads**: Handling of image uploads for user profiles (`profilePicture`) and posts (`imageUrl`), stored in Cloudinary.
+- **🗑️ File Deletion**: Automatic removal of images stored in Cloudinary when an `Account` or `Post` is deleted.
+- **🔗 Collection Relations**: `Posts` are related to `Accounts` via a MongoDB reference.
+- **🔒 Authentication**: User authentication using JWT, with route protection via the Bearer scheme.
+- **🛡️ Security**: Password management with bcrypt to securely store passwords.
+- **🌱 Data Seeds**: Scripts to seed initial data into the database.
 
-## Tecnologías Utilizadas 🛠️
+## Technologies Used 🛠️
 
-- **Node.js**: Entorno de ejecución para JavaScript en el servidor.
-- **Express**: Framework de Node.js para la construcción de aplicaciones web y APIs.
-- **MongoDB Atlas**: Base de datos NoSQL para almacenar los datos de las cuentas y publicaciones.
-- **Mongoose**: ODM para modelar datos en MongoDB.
-- **Cloudinary**: Servicio para la gestión de imágenes, utilizado para almacenar imágenes de perfiles y publicaciones.
-- **Multer**: Middleware para la gestión de archivos en solicitudes HTTP.
-- **bcrypt**: Para el hasheo de contraseñas.
-- **jsonwebtoken**: Para la generación y verificación de JWT.
-- **dotenv**: Módulo para manejar variables de entorno.
+- **Node.js**: JavaScript runtime for server-side code.
+- **Express**: Node.js framework for building web apps and APIs.
+- **MongoDB Atlas**: NoSQL database for storing accounts and posts.
+- **Mongoose**: ODM to model data in MongoDB.
+- **Cloudinary**: Image management service used to store profile and post images.
+- **Multer**: Middleware for handling HTTP file uploads.
+- **bcrypt**: For password hashing.
+- **jsonwebtoken**: For JWT creation and verification.
+- **dotenv**: Module for managing environment variables.
 
-## Instalación 🚀
+## Installation 🚀
 
-Sigue los pasos a continuación para clonar y configurar el proyecto en tu entorno local:
+Follow these steps to clone and set up the project locally:
 
-1. **Clonar el repositorio**:
+1. **Clone the repository**:
    ```bash
    git clone https://github.com/aidact3/InstagramDB.git
    cd InstagramDB
+   ```
 
-2. **Instalar dependencias**:
+2. **Install dependencies**:
    ```bash
    npm install
    ```
 
-3. **Configurar variables de entorno**:
-   Crea un archivo `.env` en la raíz del proyecto con las siguientes variables:
+3. **Configure environment variables**:
+   Create a `.env` file in the root with these variables:
    ```
-   DB_URL=<tu_mongoDB_atlas_url>
-   CLOUDINARY_CLOUD_NAME=<tu_nombre_de_cloudinary>
-   CLOUDINARY_API_KEY=<tu_api_key_de_cloudinary>
-   CLOUDINARY_API_SECRET=<tu_api_secret_de_cloudinary>
-   JWT_SECRET=<tu_secreto_jwt>
+   DB_URL=<your_mongoDB_atlas_url>
+   CLOUDINARY_CLOUD_NAME=<your_cloudinary_cloud_name>
+   CLOUDINARY_API_KEY=<your_cloudinary_api_key>
+   CLOUDINARY_API_SECRET=<your_cloudinary_api_secret>
+   JWT_SECRET=<your_jwt_secret>
    ```
 
-4. **Ejecutar el proyecto**:
+4. **Run the project**:
    ```bash
    npm start
    ```
@@ -61,92 +62,94 @@ Sigue los pasos a continuación para clonar y configurar el proyecto en tu entor
 
 ### Accounts
 
-- **POST /api/v1/account/**: Crea una nueva cuenta.
-  - **Parámetros de la solicitud (form-data)**:
-    - `username`: Nombre de usuario (string).
-    - `password`: Contraseña del usuario (string).
-    - `bio`: Biografía del usuario (string).
-    - `profilePicture`: Imagen de perfil (archivo).
+- **POST /api/v1/account/**: Create a new account.
+  - **Request parameters (form-data)**:
+    - `username`: Username (string).
+    - `password`: User password (string).
+    - `bio`: User biography (string).
+    - `profilePicture`: Profile image (file).
 
-- **POST /api/v1/account/login**: Autentica al usuario y devuelve un token JWT.
-  - **Parámetros de la solicitud (JSON)**:
-    - `username`: Nombre de usuario (string).
-    - `password`: Contraseña del usuario (string).
+- **POST /api/v1/account/login**: Authenticate user and return JWT token.
+  - **Request parameters (JSON)**:
+    - `username`: Username (string).
+    - `password`: User password (string).
 
-- **GET /api/v1/account/**: Obtiene todas las cuentas. **(Requiere Bearer Token)**
+- **GET /api/v1/account/**: Get all accounts. **(Requires Bearer Token)**
 
-- **GET /api/v1/account/:id**: Obtiene una cuenta por su ID. **(Requiere Bearer Token)**
+- **GET /api/v1/account/:id**: Get account by ID. **(Requires Bearer Token)**
 
-- **PUT /api/v1/account/:id**: Actualiza una cuenta existente. **(Requiere Bearer Token)**
-  - **Parámetros de la solicitud (form-data)**:
-    - `username`: Nombre de usuario (string).
-    - `password`: Contraseña del usuario (string, opcional).
-    - `bio`: Biografía del usuario (string).
-    - `profilePicture`: Imagen de perfil (archivo).
+- **PUT /api/v1/account/:id**: Update an existing account. **(Requires Bearer Token)**
+  - **Request parameters (form-data)**:
+    - `username`: Username (string).
+    - `password`: User password (string, optional).
+    - `bio`: User biography (string).
+    - `profilePicture`: Profile image (file).
 
-- **DELETE /api/v1/account/:id**: Elimina una cuenta por su ID (incluyendo la imagen en Cloudinary). **(Requiere Bearer Token)**
+- **DELETE /api/v1/account/:id**: Delete an account by ID (including image in Cloudinary). **(Requires Bearer Token)**
 
 ### Posts
 
-- **POST /api/v1/posts/**: Crea una nueva publicación. **(Requiere Bearer Token)**
-  - **Parámetros de la solicitud (form-data)**:
-    - `caption`: Descripción de la publicación (string).
-    - `image`: Imagen de la publicación (archivo).
-    - `account`: ID de la cuenta asociada (ObjectId).
+- **POST /api/v1/posts/**: Create a new post. **(Requires Bearer Token)**
+  - **Request parameters (form-data)**:
+    - `caption`: Post description (string).
+    - `image`: Post image (file).
+    - `account`: Associated account ID (ObjectId).
 
-- **GET /api/v1/posts/**: Obtiene todas las publicaciones. **(Requiere Bearer Token)**
+- **GET /api/v1/posts/**: Get all posts. **(Requires Bearer Token)**
 
-- **GET /api/v1/posts/:id**: Obtiene una publicación por su ID. **(Requiere Bearer Token)**
+- **GET /api/v1/posts/:id**: Get post by ID. **(Requires Bearer Token)**
 
-- **PUT /api/v1/posts/:id**: Actualiza una publicación existente. **(Requiere Bearer Token)**
-  - **Parámetros de la solicitud (form-data)**:
-    - `caption`: Descripción de la publicación (string).
-    - `image`: Imagen de la publicación (archivo).
+- **PUT /api/v1/posts/:id**: Update an existing post. **(Requires Bearer Token)**
+  - **Request parameters (form-data)**:
+    - `caption`: Post description (string).
+    - `image`: Post image (file).
 
-- **DELETE /api/v1/posts/:id**: Elimina una publicación por su ID (incluyendo la imagen en Cloudinary). **(Requiere Bearer Token)**
+- **DELETE /api/v1/posts/:id**: Delete a post by ID (including image in Cloudinary). **(Requires Bearer Token)**
 
-## Semillas de Datos
+## Data Seeds
 
-Para poblar la base de datos con datos iniciales, puedes ejecutar los scripts de semillas incluidos:
+To populate the database with initial data, you can run included seed scripts:
 
-- **Accounts**: 
+- **Accounts**:
   ```bash
   npm run seedAccount
   ```
-  
-- **Posts**: 
+
+- **Posts**:
   ```bash
   npm run seedPost
   ```
 
-Estos scripts crearán cuentas y publicaciones de ejemplo en tu base de datos.
+These scripts will create sample accounts and posts in your database.
 
-## Gestión de Archivos en Cloudinary
+## File Management in Cloudinary
 
-### Subida de Imágenes
+### Uploading Images
 
-Las imágenes se suben a Cloudinary y se almacenan en carpetas específicas según el tipo de datos:
+Images are uploaded to Cloudinary and stored in specific folders based on the data type:
 
-- **Profile_Pictures**: Carpeta donde se guardan las imágenes de perfil de los usuarios.
-- **Instagram_Posts**: Carpeta donde se guardan las imágenes asociadas a las publicaciones.
+- **Profile_Pictures**: Folder for user profile images.
+- **Instagram_Posts**: Folder for images related to posts.
 
-### Eliminación de Imágenes
+### Deleting Images
 
-Las imágenes se eliminan automáticamente de Cloudinary cuando se elimina la cuenta o la publicación correspondiente en la base de datos. Esto asegura que no queden archivos huérfanos en el almacenamiento de Cloudinary.
+Images are automatically deleted from Cloudinary when the corresponding account or post is deleted from the database. This ensures no orphaned files remain in Cloudinary storage.
 
-## Reutilización del Storage en Cloudinary
+## Reusing Storage in Cloudinary
 
-El proyecto incluye la capacidad de reutilizar el almacenamiento en Cloudinary. Esto se logra configurando dinámicamente la carpeta de destino para las imágenes subidas, permitiendo que diferentes tipos de archivos se almacenen en subcarpetas adecuadas dentro de un mismo proyecto. Esta funcionalidad es útil para mantener organizado el contenido multimedia y se puede personalizar o comentar según las necesidades específicas del proyecto.
+The project supports reusing Cloudinary storage by dynamically setting the destination folder for uploaded images, allowing different file types to be stored in appropriate subfolders within the same project. This helps keep media content organized and can be customized or commented as needed.
 
-## Autenticación con Tokens y Bearer
+## Token Authentication and Bearer Scheme
 
-### Autenticación
+### Authentication
 
-La API utiliza JSON Web Tokens (JWT) para autenticar a los usuarios. Cuando un usuario inicia sesión con éxito, se le proporciona un token JWT. Este token se debe incluir en el encabezado de autorización de las solicitudes a las rutas protegidas usando el esquema **Bearer**.
+The API uses JSON Web Tokens (JWT) to authenticate users. When a user successfully logs in, they receive a JWT token. This token must be included in the Authorization header of requests to protected routes using the **Bearer** scheme.
 
-### Esquema Bearer
+### Bearer Scheme
 
-El token JWT se envía en las solicitudes mediante el esquema Bearer:
+The JWT token is sent in requests using the Bearer scheme:
 
 ```plaintext
-Authorization: Bearer <tu_token_jwt>
+Authorization: Bearer <your_jwt_token>
+```
+
